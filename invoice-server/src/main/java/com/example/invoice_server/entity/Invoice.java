@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,7 +14,8 @@ import java.util.List;
 @Table(name = "invoices")
 public class Invoice extends BaseEntity {
 
-    @Column(nullable = false)
+    // ---- Basic Info ----
+    @Column(nullable = false, unique = true)
     private String invoiceNumber;
 
     @Column(nullable = false)
@@ -22,22 +24,23 @@ public class Invoice extends BaseEntity {
     private LocalDate dueDate;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private InvoiceStatus status;   // DRAFT, SENT, PAID
 
     private String notes;
 
     // ---- Calculation Fields ----
     @Column(nullable = false)
-    private Double subtotal;
+    private BigDecimal subtotal;
 
     @Column(nullable = false)
-    private Double taxRate;   // overall GST %
+    private BigDecimal taxRate;   // GST %
 
     @Column(nullable = false)
-    private Double taxAmount;
+    private BigDecimal taxAmount;
 
     @Column(nullable = false)
-    private Double totalAmount;
+    private BigDecimal totalAmount;
 
     // ---- Bank Details ----
     private String bankAccountName;
@@ -47,9 +50,6 @@ public class Invoice extends BaseEntity {
     private String templateName;
 
     // ---- Relationships ----
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
 
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
@@ -59,6 +59,8 @@ public class Invoice extends BaseEntity {
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "invoice",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<InvoiceItem> items;
 }

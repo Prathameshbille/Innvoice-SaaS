@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Entity
@@ -16,15 +18,15 @@ public class InvoiceItem extends BaseEntity{
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(nullable = false)
-    private Double unitPrice;
+    @Column(nullable = false, precision = 15, scale = 2)
+    private BigDecimal unitPrice;
 
-
-    @Column(nullable = false)
-    private Double lineTotal;
+    @Column(nullable = false, precision = 15, scale = 2)
+    private BigDecimal lineTotal;
 
     @ManyToOne
     @JoinColumn(name = "invoice_id", nullable = false)
     private Invoice invoice;
+
 
 }

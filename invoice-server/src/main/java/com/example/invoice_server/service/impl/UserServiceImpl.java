@@ -6,15 +6,18 @@ import com.example.invoice_server.entity.User;
 import com.example.invoice_server.exception.EmailAlreadyExistsException;
 import com.example.invoice_server.repository.UserRepository;
 import com.example.invoice_server.service.UserService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
     @Override
     public UserResponseDTO registerUser(UserRequestDTO request){
@@ -25,7 +28,7 @@ public class UserServiceImpl implements UserService {
         User user=new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         User savedUser=userRepository.save(user);
 
