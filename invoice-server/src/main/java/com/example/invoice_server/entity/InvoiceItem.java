@@ -19,8 +19,6 @@ public class InvoiceItem extends BaseEntity{
     @Column(nullable = false)
     private Double unitPrice;
 
-    @Column(nullable = false)
-    private Double gstRate;
 
     @Column(nullable = false)
     private Double lineTotal;
