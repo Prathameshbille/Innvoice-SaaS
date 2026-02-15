@@ -63,4 +63,25 @@ public class InvoiceController {
         return ResponseEntity.ok("Invoice status updated");
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteInvoice(@PathVariable Long id){
+
+        invoiceService.deleteInvoice(id);
+
+        return ResponseEntity.ok("Invoice deleted successfully");
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<InvoiceResponseDTO>> filterInvoices(
+
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) Long clientId
+
+    ) {
+
+        return ResponseEntity.ok(
+                invoiceService.filterInvoices(status, clientId)
+        );
+    }
+
 }

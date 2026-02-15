@@ -57,6 +57,9 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setNotes(request.getNotes());
         invoice.setTaxRate(request.getTaxRate());
         invoice.setStatus(InvoiceStatus.DRAFT);
+        invoice.setBankAccountName(request.getBankAccountName());
+        invoice.setBankAccountNumber(request.getBankAccountNumber());
+        invoice.setIfscCode(request.getIfscCode());
 
 
         invoice.setCompany(company);
@@ -268,6 +271,54 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         invoiceRepository.save(invoice);
 
+    }
+
+    @Override
+    public void deleteInvoice(Long id) {
+
+        Invoice invoice = invoiceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Invoice not found"));
+
+        invoiceRepository.delete(invoice);
+
+    }
+
+
+    @Override
+    public List<InvoiceResponseDTO> filterInvoices(String status, Long clientId) {
+
+        List<Invoice> invoices;
+
+        if (status != null && clientId != null) {
+
+            invoices = invoiceRepository.findByStatusAndClientId(
+                    InvoiceStatus.valueOf(status),
+                    clientId
+            );
+
+        }
+        else if (status != null) {
+
+            invoices = invoiceRepository.findByStatus(
+                    InvoiceStatus.valueOf(status)
+            );
+
+        }
+        else if (clientId != null) {
+
+            invoices = invoiceRepository.findByClientId(clientId);
+
+        }
+        else {
+
+            invoices = invoiceRepository.findAll();
+
+        }
+
+        return invoices
+                .stream()
+                .map(InvoiceMapper::toResponseDTO)
+                .toList();
     }
 
 
