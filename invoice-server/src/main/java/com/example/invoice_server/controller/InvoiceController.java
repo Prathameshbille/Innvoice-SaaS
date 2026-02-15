@@ -2,6 +2,7 @@ package com.example.invoice_server.controller;
 
 import com.example.invoice_server.dto.InvoiceRequestDTO;
 import com.example.invoice_server.dto.InvoiceResponseDTO;
+import com.example.invoice_server.dto.UpdateInvoiceStatusDTO;
 import com.example.invoice_server.service.InvoiceService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -51,4 +52,15 @@ public class InvoiceController {
         return ResponseEntity.ok("Invoice Updated Successfully");
 
     }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<String> updateStatus(
+            @PathVariable Long id,
+            @RequestBody UpdateInvoiceStatusDTO request) {
+
+        invoiceService.updateInvoiceStatus(id, request.getStatus());
+
+        return ResponseEntity.ok("Invoice status updated");
+    }
+
 }

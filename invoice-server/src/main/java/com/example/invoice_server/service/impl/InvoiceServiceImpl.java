@@ -260,8 +260,16 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public void updateInvoiceStatus(Long id, String status) {
-        
+
+        Invoice invoice = invoiceRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Invoice not found"));
+
+        invoice.setStatus(InvoiceStatus.valueOf(status.toUpperCase()));
+
+        invoiceRepository.save(invoice);
+
     }
+
 
 
 }
